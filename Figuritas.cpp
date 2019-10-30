@@ -1,12 +1,12 @@
 /*
- * GRAFICACION - UNIDAD 2
- * CLASE MATEMATICAS TEMA FIGURAS GEOMETRICAS
- * CARACTERISTICAS DE AREA Y PERIMETRO
- * INTEGRANTES:
- * IVAN FRANCO DELGADO
- * JESUS EDUARDO SOSA DIAZ
- * JOSUE TORRES AVALOS
- */
+* GRAFICACION - UNIDAD 2
+* CLASE MATEMATICAS TEMA FIGURAS GEOMETRICAS
+* CARACTERISTICAS DE AREA Y PERIMETRO
+* INTEGRANTES:
+* IVAN FRANCO DELGADO
+* JESUS EDUARDO SOSA DIAZ
+* JOSUE TORRES AVALOS
+*/
 
 #include <GL/glut.h> // IMPORTA LA LIBRERIA DE GLUT
 #include <cmath>
@@ -16,27 +16,37 @@
 #include "Rectangle.h"
 #include "Square.h"
 #include "Triangle.h"
+#include <string>
 
- // VALORES UTILIZADOS PARA EL TAMANO DE LA
- // PANTALLA DEFINIENDO ALTO Y ANCHO
+// VALORES UTILIZADOS PARA EL TAMANO DE LA
+// PANTALLA DEFINIENDO ALTO Y ANCHO
 #define HEIGHT 720
 #define WIDTH 1280
 
- // PROTOTIPOS DE FUNCIONES
+// PROTOTIPOS DE FUNCIONES
 void initializer(void);
 void userInterface(void);
 void keyInput(unsigned char, int, int);
 void mouseControl(int, int, int, int);
 bool collisionDetection(int);
 bool isInside(int, int, int, int, int, int);
+void defaultValues();
 
+//bool tecleando = false;
+//bool termino = true;
+int finaliza = 0;
+int noValores = 0;
+
+int val1 = 9, val2 = 5;
 Vertex mouseClic; // ALMACENA EL LUGAR DONDE HACE CLIC
 int options = 0;
-static long font = (long) GLUT_BITMAP_TIMES_ROMAN_24;
+static long font = (long)GLUT_BITMAP_TIMES_ROMAN_24;
 Rectangle rec(200, 650, 200, 100, 1.0, 0.0, 0.0);
 Square sq(200, 480, 120, 0.0, 1.0, 0.0);
 Triangle tr(200, 280, 150, 120, 0.0, 0.0, 1.0);
 Circle cir(200, 100, 75, 1.0, 0.0, 1.0);
+
+
 
 int main(int argc, char* argv[]) {
 	glutInit(&argc, argv);
@@ -70,86 +80,241 @@ void writeBitmapString(void* font, const char* string)
 }
 
 void keyInput(unsigned char key, int x, int y)
-{/*
+{
+	/*
+	UTILIZO LAS BANDERAS TECLEANDO PARA SABER SI ESTA TECLEANDO (OBVIAMENTE) Y TERMINO PARA SABER SI YA TERMINO DE ESCRIBIR TODOS LOS VALORES
+	FINALIZA ES COMO UN APUNTADOR QUE TE DICE QUE VALOR EDITA
+	*/
 	switch (key)
 	{
 	case 27: // esc key
 		exit(0);
-	case 108: // l which stands for line
-		message = "Command active: Line";
-		active = true;
-		draw = 1;
-		glutPostRedisplay();
-		break;
-	case 114: // r which stands for rectangle
-		message = "Command active: Rectangle";
-		active = true;
-		draw = 2;
-		glutPostRedisplay();
-		break;
-	case 115: // s which stands for square
-		message = "Command active: Square";
-		active = true;
-		draw = 3;
-		glutPostRedisplay();
-		break;
-	case 99: // c which stands for circle
-		message = "Command active: Circle";
-		active = true;
-		draw = 4;
-		glutPostRedisplay();
-		break;
-	case 100: // d which stands for default
-		message = "Select a command";
-		active = false;
-		fillPoints = false;
-		draw = -1;
-		clics = 0;
-		used = false;
-		for (size_t i = 0; i < 5; i++)
-		{
-			position[i] = 0;
+	case 13: // enter
+		if (finaliza == 2) {
+			//termino = true;
+			//tecleando = false;
+			
+			defaultValues();
+			glutPostRedisplay();
 		}
-		rectangles.clear();
-		squares.clear();
-		circles.clear();
-		lines.clear();
-		glutPostRedisplay();
+		/*
+		EL CHISTE DE ESTO ES QUE, CADA FIGURA TIENE UN NUMERO DE VALORES (CUADRADO USA SOLO UNO, EL LADO, EL TRIANGULO USA DOS, BASE Y ALTURA) Y CUANDO
+		LA VARIABLE "FINALIZA" ES MENOR AL NUMERO DE VALORES VA AUMENTANDO, OSEA CAMBIANDO DE VARIABLE "VAL", Y CUANDO LLEGA A SER IGUAL AL NO DE VALORES
+		COMO ERA DE ESPERARSE, ES PORQUE YA TERMINASTE TODOS LOS PINSHIS VALORES POSIBLES, ASI QUE LE DICES AL PROGRAMA QUE EL USUARIO YA NO DEBE DE ESTAR
+		TECLEANDO NI VRGS (ALTERANDO LOS VALORES DE LAS VARIABLES) Y QUE YA TERMINO DE EDITAR TODAS LAS VARIABLES.
+
+		*/
+		break;
+	case 99: // c
+		//tecleando = true;//
+		//termino = false;// pa limpiar use el enter por hueva :v
+		break;
+	case 49: // 1
+		if (options != 0)
+		{			
+			if (finaliza == 0) {
+				val1 = 1;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++;	val2 = 1; }
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 1;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 50: // 2
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 2;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 2; }
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 2;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 51: // 3
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 3;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 3; }
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 3;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 52: // 4
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 4;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 4; }
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 4;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 53: // 5
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 5;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 5; }
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 5;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 54: // 6
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 6;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 6;}
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 6;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 55: // 7
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 7;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 7;}
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 7;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 56: // 8
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 8;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 8;}
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 8;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
+		break;
+	case 57: // 9
+		if (options != 0)
+		{
+			if (finaliza == 0) {
+				val1 = 9;
+				finaliza++;
+				if (options == 2 || options == 4) { finaliza++; val2 = 9; }
+				glutPostRedisplay();
+				return;
+			}
+			if (finaliza == 1) {
+				val2 = 9;
+				finaliza++;
+				glutPostRedisplay();
+				return;
+			}
+		}
 		break;
 	default:
 		break;
-	}*/
+	}
+}
+
+void defaultValues() {
+	val1 = 9;
+	val2 = 5;
+	finaliza = 0;
 }
 
 /*
- * FUNCION QUE CAPTURA LOS CLIC DEL RATON
- */
+* FUNCION QUE CAPTURA LOS CLIC DEL RATON
+*/
 void mouseControl(int button, int state, int x, int y)
 {
 	// BOTON IZQUIERDO PRESIONADO
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
 		mouseClic.setX(x); // ALMACENA LAS COORDENADAS DEL CLIC
-		mouseClic.setY(y); 
+		mouseClic.setY(y);
 
 		if (collisionDetection(1))
 		{
 			options = 1;
+			defaultValues();
 			glutPostRedisplay();
 		}
 		else if (collisionDetection(2))
 		{
 			options = 2;
+			defaultValues();
 			glutPostRedisplay();
 		}
 		else if (collisionDetection(3))
 		{
 			options = 3;
+			defaultValues();
 			glutPostRedisplay();
 		}
 		else if (collisionDetection(4))
 		{
 			options = 4;
+			defaultValues();
 			glutPostRedisplay();
 		}
 	}
@@ -183,9 +348,9 @@ bool collisionDetection(int figure) {
 	}
 	case 4: {
 		Vertex aux_pos = cir.getOrigin();
-		return sqrt((mouseClic.getX() - aux_pos.getX())*(mouseClic.getX() - aux_pos.getX()) + 
-			(HEIGHT - mouseClic.getY() - aux_pos.getY())*(HEIGHT - mouseClic.getY() - aux_pos.getY())) < cir.getRadius();
-	}			
+		return sqrt((mouseClic.getX() - aux_pos.getX()) * (mouseClic.getX() - aux_pos.getX()) +
+			(HEIGHT - mouseClic.getY() - aux_pos.getY()) * (HEIGHT - mouseClic.getY() - aux_pos.getY())) < cir.getRadius();
+	}
 	default:
 		return false;
 	}
@@ -196,7 +361,7 @@ bool collisionDetection(int figure) {
 */
 float area(int x1, int y1, int x2, int y2, int x3, int y3)
 {
-	return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2))/2.0);
+	return abs((x1 * (y2 - y3) + x2 * (y3 - y1) + x3 * (y1 - y2)) / 2.0);
 }
 
 /*
@@ -236,38 +401,110 @@ void userInterface(void)
 	sq.drawShapeFill();
 	tr.drawShapeFill();
 	cir.drawShapeTrig();
-	
+
 	switch (options) {
-		case 1: // ENTRA AL RECTANGULO
-		{
-			glColor3f(1.0, 0.0, 0.0);
-			glRasterPos2f(570, 600);
-			writeBitmapString((void*)font, "Figura Seleccionada: Rectangulo");
-			break;
-		}
-		case 2: // ENTRA AL CUADRADO
-		{
-			glColor3f(0.0, 1.0, 0.0);
-			glRasterPos2f(570, 600);
-			writeBitmapString((void*)font, "Figura Seleccionada: Cuadrado");
-			break;
-		}
-		case 3: // ENTRA AL TRIANGULO
-		{
-			glColor3f(0.0, 0.0, 1.0);
-			glRasterPos2f(570, 600);
-			writeBitmapString((void*)font, "Figura Seleccionada: Triangulo");
-			break;
-		}
-		case 4: // ENTRA AL CIRCULO
-		{
-			glColor3f(1.0, 0.0, 1.0);
-			glRasterPos2f(570, 600);
-			writeBitmapString((void*)font, "Figura Seleccionada: Circulo");
-			break;
-		}
+	case 1: // ENTRA AL RECTANGULO
+	{
+		Rectangle recAr(600, 400, val1 * 20, val2 * 20, 1.0, 0.0, 0.0);
+		Rectangle recPer(1000, 400, val1 * 20, val2 * 20, 1.0, 0.0, 0.0);
+
+		glColor3f(1.0, 0.0, 0.0);
+		glRasterPos2f(570, 600);
+		writeBitmapString((void*)font, "Figura Seleccionada: Rectangulo");
+		recAr.drawShapeFill();
+		recPer.drawShape();
+
+		glColor3f(0.0, 0.0, 0.0);
+		glRasterPos2f(550, 500);
+		writeBitmapString((void*)font, "Base:");
+		glRasterPos2f(630, 500);
+		writeBitmapString((void*)font, std::to_string(val1).c_str());
+		glRasterPos2f(720, 500);
+		writeBitmapString((void*)font, "Altura:");
+		glRasterPos2f(800, 500);
+		writeBitmapString((void*)font, std::to_string(val2).c_str());
+
+		glRasterPos2f(550, 300);
+		writeBitmapString((void*)font, "Area= algo X algo");
+		glRasterPos2f(900, 300);
+		writeBitmapString((void*)font, "Perimetro = 2algo + 2algo");
+		break;
 	}
-	
+	case 2: // ENTRA AL CUADRADO
+	{
+		Square sqAr(600, 400, val1 * 20, 0.0, 1.0, 0.0);
+		Square sqPer(1000, 400, val1 * 20, 0.0, 1.0, 0.0);
+		
+		glColor3f(0.0, 1.0, 0.0);
+		glRasterPos2f(570, 600);
+		writeBitmapString((void*)font, "Figura Seleccionada: Cuadrado");
+		sqAr.drawShapeFill();
+		sqPer.drawShape();
+
+		glColor3f(0.0, 0.0, 0.0);
+		glRasterPos2f(550, 500);
+		writeBitmapString((void*)font, "Lado:");
+		glRasterPos2f(630, 500);
+		writeBitmapString((void*)font, std::to_string(val1).c_str());
+
+		glRasterPos2f(550, 300);
+		writeBitmapString((void*)font, "Area= lado X lado");
+		glRasterPos2f(900, 300);
+		writeBitmapString((void*)font, "Perimetro = 4 x lado");
+		break;
+	}
+	case 3: // ENTRA AL TRIANGULO
+	{
+		Triangle trAr(600, 400, val1 * 20, val2 * 20, 0.0, 0.0, 1.0);
+		Triangle trPer(1000, 400, val1 * 20, val2 * 20, 0.0, 0.0, 1.0);
+
+		glColor3f(0.0, 0.0, 1.0);
+		glRasterPos2f(570, 600);
+		writeBitmapString((void*)font, "Figura Seleccionada: Triangulo");
+		trAr.drawShapeFill();
+		trPer.drawShape();
+
+		glColor3f(0.0, 0.0, 0.0);
+		glRasterPos2f(550, 500);
+		writeBitmapString((void*)font, "Base:");
+		glRasterPos2f(720, 500);
+		glRasterPos2f(630, 500);
+		writeBitmapString((void*)font, std::to_string(val1).c_str());
+		writeBitmapString((void*)font, "Altura:");
+		glRasterPos2f(800, 500);
+		writeBitmapString((void*)font, std::to_string(val2).c_str());
+
+		glRasterPos2f(550, 300);
+		writeBitmapString((void*)font, "Area= (algo X algo)/2");
+		glRasterPos2f(900, 300);
+		writeBitmapString((void*)font, "Perimetro = 3algo");
+		break;
+	}
+	case 4: // ENTRA AL CIRCULO
+	{
+		Circle cirAr(600, 400, val1 * 20, 1.0, 0.0, 1.0);
+		Circle cirPer(1000, 400, val1 * 20, 1.0, 0.0, 1.0);
+
+		glColor3f(1.0, 0.0, 1.0);
+		glRasterPos2f(570, 600);
+		writeBitmapString((void*)font, "Figura Seleccionada: Circulo");
+		cirAr.drawShapeTrig();
+		cirPer.drawShape();
+
+		glColor3f(0.0, 0.0, 0.0);
+		glRasterPos2f(550, 500);
+		writeBitmapString((void*)font, "Radio:");
+		glRasterPos2f(630, 500);
+		writeBitmapString((void*)font, std::to_string(val1).c_str());
+
+		glRasterPos2f(550, 300);
+		writeBitmapString((void*)font, "Area= PI X radio X radio");
+		glRasterPos2f(900, 300);
+		writeBitmapString((void*)font, "Perimetro = PI X radio");
+		break;
+	}
+	}
+	if (finaliza == 2){	finaliza = 0; }
 	glutSwapBuffers();
 	glFlush();
 }
